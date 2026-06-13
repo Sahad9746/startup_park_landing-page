@@ -1,0 +1,457 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ============================================================
+   UNICORN NIGHT — Design System
+   Deep Navy · Constellation Stars · Warm Gold
+   ============================================================ */
+:root {
+  /* === Core Palette === */
+  --navy-900: #030812;
+  --navy-800: #060D1A;
+  --navy-700: #091220;
+  --navy-600: #0D1A2E;
+  --navy-500: #122040;
+  --navy-400: #1A2D55;
+
+  /* === Gold Spectrum === */
+  --gold-100: #FFF8DC;
+  --gold-200: #F5E6A3;
+  --gold-300: #E8C96A;
+  --gold-400: #C9A227;
+  --gold-500: #A67C1A;
+  --gold-600: #7A5610;
+
+  /* === Warm Cream === */
+  --cream: #F2ECD8;
+  --cream-2: rgba(242, 236, 216, 0.75);
+  --cream-3: rgba(242, 236, 216, 0.45);
+  --cream-muted: rgba(242, 236, 216, 0.3);
+
+  /* === Glass === */
+  --glass: rgba(255, 255, 255, 0.04);
+  --glass-2: rgba(255, 255, 255, 0.07);
+  --glass-gold: rgba(201, 162, 39, 0.08);
+  --glass-gold-2: rgba(201, 162, 39, 0.14);
+  --glass-navy: rgba(6, 13, 26, 0.7);
+
+  /* === Borders === */
+  --border-dim: rgba(255, 255, 255, 0.07);
+  --border-gold: rgba(201, 162, 39, 0.28);
+  --border-gold-bright: rgba(201, 162, 39, 0.55);
+
+  /* === Gradients === */
+  --grad-gold: linear-gradient(135deg, #FFF8DC 0%, #E8C96A 30%, #C9A227 65%, #A67C1A 100%);
+  --grad-gold-h: linear-gradient(90deg, #FFF8DC 0%, #C9A227 50%, #A67C1A 100%);
+  --grad-navy: linear-gradient(180deg, var(--navy-800) 0%, var(--navy-900) 100%);
+  --grad-shine: linear-gradient(90deg, transparent 0%, rgba(201,162,39,0.4) 50%, transparent 100%);
+
+  /* === Fonts === */
+  --font-display: 'Cinzel', 'Playfair Display', serif;
+  --font-serif: 'Playfair Display', serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* === Easing === */
+  --ease: cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* ============================================================
+   RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; color-scheme: dark; }
+
+body {
+  min-height: 100vh;
+  background: var(--navy-900);
+  color: var(--cream);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+h1, h2, h3 { font-family: var(--font-serif); font-weight: 700; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; }
+img { display: block; max-width: 100%; }
+
+/* ============================================================
+   SCROLLBAR
+   ============================================================ */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--navy-900); }
+::-webkit-scrollbar-thumb { background: rgba(201,162,39,0.25); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(201,162,39,0.45); }
+
+/* ============================================================
+   STAR CANVAS — CSS-only starfield
+   ============================================================ */
+.star-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 60% at 70% -10%, rgba(30, 50, 120, 0.45) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 30% 100%, rgba(60, 20, 100, 0.25) 0%, transparent 60%),
+    var(--navy-900);
+  overflow: hidden;
+}
+
+/* Ambient glow — like the poster */
+.star-bg::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  right: -10%;
+  width: 70%;
+  height: 80%;
+  background: radial-gradient(ellipse at center,
+    rgba(50, 70, 160, 0.2) 0%,
+    rgba(20, 40, 100, 0.1) 40%,
+    transparent 70%);
+  border-radius: 50%;
+}
+
+/* Gold ambient glow bottom left */
+.star-bg::after {
+  content: '';
+  position: absolute;
+  bottom: -10%;
+  left: -10%;
+  width: 60%;
+  height: 60%;
+  background: radial-gradient(ellipse at center,
+    rgba(201, 162, 39, 0.06) 0%,
+    transparent 70%);
+}
+
+/* Star dots via box-shadow trick */
+.stars-sm, .stars-md, .stars-lg { position: absolute; border-radius: 50%; }
+
+.stars-sm {
+  width: 1px; height: 1px;
+  background: transparent;
+  box-shadow:
+    120px 45px rgba(255,255,255,0.7), 340px 80px rgba(255,255,255,0.5),
+    560px 30px rgba(255,255,255,0.8), 780px 60px rgba(255,255,255,0.4),
+    920px 100px rgba(255,255,255,0.6), 1100px 25px rgba(255,255,255,0.7),
+    1300px 90px rgba(255,255,255,0.5), 1450px 50px rgba(255,255,255,0.8),
+    80px 180px rgba(255,255,255,0.4), 260px 220px rgba(255,255,255,0.6),
+    480px 160px rgba(255,255,255,0.7), 700px 200px rgba(255,255,255,0.5),
+    900px 240px rgba(255,255,255,0.8), 1050px 190px rgba(255,255,255,0.4),
+    1250px 170px rgba(255,255,255,0.6), 150px 340px rgba(255,255,255,0.5),
+    380px 300px rgba(255,255,255,0.7), 600px 380px rgba(255,255,255,0.4),
+    820px 320px rgba(255,255,255,0.8), 1000px 360px rgba(255,255,255,0.6),
+    50px 500px rgba(255,255,255,0.4), 270px 480px rgba(255,255,255,0.7),
+    490px 520px rgba(255,255,255,0.5), 710px 460px rgba(255,255,255,0.8),
+    930px 500px rgba(255,255,255,0.4), 1150px 540px rgba(255,255,255,0.6),
+    200px 640px rgba(255,255,255,0.5), 420px 680px rgba(255,255,255,0.7),
+    640px 620px rgba(255,255,255,0.4), 860px 660px rgba(255,255,255,0.8),
+    1080px 700px rgba(255,255,255,0.5), 1350px 640px rgba(255,255,255,0.6),
+    30px 760px rgba(255,255,255,0.7), 310px 800px rgba(255,255,255,0.4),
+    530px 780px rgba(255,255,255,0.8), 750px 820px rgba(255,255,255,0.5);
+  animation: twinkle-sm 6s ease-in-out infinite alternate;
+}
+.stars-md {
+  width: 2px; height: 2px;
+  background: transparent;
+  box-shadow:
+    200px 120px rgba(255,255,255,0.6), 450px 80px rgba(255,255,255,0.8),
+    680px 140px rgba(255,255,255,0.5), 850px 90px rgba(255,255,255,0.7),
+    1100px 160px rgba(255,255,255,0.6), 1350px 110px rgba(255,255,255,0.8),
+    130px 300px rgba(255,255,255,0.5), 380px 280px rgba(255,255,255,0.7),
+    600px 350px rgba(255,255,255,0.8), 820px 310px rgba(255,255,255,0.6),
+    1000px 390px rgba(255,255,255,0.5), 1200px 330px rgba(255,255,255,0.7),
+    70px 500px rgba(255,255,255,0.8), 290px 540px rgba(255,255,255,0.6),
+    510px 490px rgba(255,255,255,0.5), 730px 580px rgba(255,255,255,0.7),
+    950px 520px rgba(255,255,255,0.8), 1170px 560px rgba(255,255,255,0.6);
+  animation: twinkle-md 9s ease-in-out infinite alternate;
+}
+.stars-lg {
+  width: 3px; height: 3px;
+  background: transparent;
+  box-shadow:
+    300px 150px rgba(255,255,220,0.9), 750px 80px rgba(255,255,220,0.7),
+    1100px 200px rgba(255,255,220,0.9), 500px 400px rgba(255,255,220,0.8),
+    900px 350px rgba(255,255,220,0.7), 150px 600px rgba(255,255,220,0.9),
+    650px 550px rgba(255,255,220,0.8), 1200px 480px rgba(255,255,220,0.7);
+  animation: twinkle-lg 12s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle-sm {
+  0%   { opacity: 0.4; } 50%  { opacity: 0.9; } 100% { opacity: 0.5; }
+}
+@keyframes twinkle-md {
+  0%   { opacity: 0.5; } 50%  { opacity: 1;   } 100% { opacity: 0.6; }
+}
+@keyframes twinkle-lg {
+  0%   { opacity: 0.6; } 50%  { opacity: 1;   } 100% { opacity: 0.7; }
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.container {
+  width: 100%;
+  max-width: 1160px;
+  margin: 0 auto;
+  padding-inline: clamp(1.25rem, 5vw, 2.5rem);
+}
+
+/* ============================================================
+   GOLD TEXT GRADIENT
+   ============================================================ */
+.gold {
+  background: var(--grad-gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.gold-h {
+  background: var(--grad-gold-h);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================================
+   ORNAMENTAL DIVIDER — matches poster's gold lines
+   ============================================================ */
+.orn-line {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--gold-400);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.orn-line::before,
+.orn-line::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--grad-gold-h);
+  opacity: 0.5;
+}
+.orn-line .diamond { font-size: 0.5rem; }
+
+/* Horizontal gold rule */
+.gold-rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,162,39,0.5), transparent);
+  margin-block: 0;
+  border: none;
+}
+
+/* ============================================================
+   GLASS CARD
+   ============================================================ */
+.card {
+  background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-gold);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201,162,39,0.6), transparent);
+}
+
+/* ============================================================
+   BADGE / KICKER
+   ============================================================ */
+.kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-300);
+  background: rgba(201,162,39,0.08);
+  border: 1px solid rgba(201,162,39,0.25);
+  padding: 0.4rem 1rem;
+  border-radius: 4px;
+}
+.kicker .star { color: var(--gold-400); }
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn-gold {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 2.5rem;
+  background: var(--grad-gold);
+  color: #0A0600;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  box-shadow: 0 0 28px rgba(201,162,39,0.3), 0 4px 20px rgba(0,0,0,0.5);
+}
+.btn-gold::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, transparent 60%);
+}
+.btn-gold:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 50px rgba(201,162,39,0.5), 0 8px 30px rgba(0,0,0,0.6);
+}
+.btn-gold:active { transform: scale(0.98); }
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 2.5rem;
+  background: transparent;
+  color: var(--gold-200);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid var(--border-gold-bright);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+}
+.btn-outline:hover {
+  background: rgba(201,162,39,0.1);
+  border-color: var(--gold-300);
+  color: var(--gold-100);
+}
+
+/* ============================================================
+   FORM
+   ============================================================ */
+.form-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cream-3);
+  margin-bottom: 0.5rem;
+}
+.form-label .req { color: var(--gold-300); }
+
+.form-input {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  color: var(--cream);
+  padding: 0.8rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.2s var(--ease);
+}
+.form-input:focus {
+  border-color: rgba(201,162,39,0.5);
+  background: rgba(201,162,39,0.05);
+  box-shadow: 0 0 0 3px rgba(201,162,39,0.08);
+}
+.form-input::placeholder { color: rgba(242,236,216,0.25); }
+
+select.form-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23C9A227' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.875rem center;
+  padding-right: 2.5rem;
+}
+select.form-input option { background: #0D1A2E; color: var(--cream); }
+
+textarea.form-input { resize: vertical; min-height: 80px; }
+
+.form-input:user-invalid { border-color: rgba(255,100,100,0.5); }
+
+.form-err {
+  display: none;
+  color: #ff7070;
+  font-size: 0.75rem;
+  margin-top: 0.35rem;
+}
+.form-input:user-invalid ~ .form-err,
+.form-input[aria-invalid="true"] ~ .form-err { display: flex; gap: 0.3rem; align-items: center; }
+
+/* Checkboxes */
+.check-wrap { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; user-select: none; }
+.check-box {
+  appearance: none;
+  width: 17px; height: 17px;
+  border: 1px solid rgba(201,162,39,0.3);
+  border-radius: 3px;
+  background: rgba(255,255,255,0.04);
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.check-box:checked { background: var(--grad-gold); border-color: transparent; }
+.check-box:checked::after {
+  content: '';
+  position: absolute;
+  left: 4px; top: 1px;
+  width: 5px; height: 9px;
+  border: 2px solid #0A0600;
+  border-top: none; border-left: none;
+  transform: rotate(45deg);
+}
+.check-box-label { font-size: 0.875rem; color: var(--cream-2); }
+
+.radio-box {
+  appearance: none;
+  width: 17px; height: 17px;
+  border: 1px solid rgba(201,162,39,0.3);
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+.radio-box:checked { border-color: var(--gold-400); }
+.radio-box:checked::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border-radius: 50%;
+  background: var(--grad-gold);
+}
+
+/* ============================================================
+   GRID UTILITIES
+   ============================================================ */
+.g2 { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+.g3 { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
+.g4 { display: grid; grid-template-columns: repeat(2,1fr); gap: 1rem; }
+@media (min-width: 600px)  { .g2 { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 768px)  { .g3 { grid-template-columns: repeat(3,1fr); } }
+@media (min-width: 900px)  { .g4 { grid-template-columns: repeat(4,1fr); } }

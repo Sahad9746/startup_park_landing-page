@@ -1,0 +1,39 @@
+[
+  {
+    "fullName": "Alice Smith",
+    "email": "alice@example.com",
+    "phone": "+91 99999 88888",
+    "company": "VC Capital",
+    "jobTitle": "Partner",
+    "industry": "Finance",
+    "referral": "Email",
+    "dietary": [
+      "Vegetarian"
+    ],
+    "requirements": "",
+    "isFundraising": false,
+    "investmentStage": "",
+    "helpNeeded": "",
+    "id": "reg_varnfc8_mqb402wt",
+    "createdAt": "2026-06-12T15:56:41.021Z"
+  },
+  {
+    "fullName": "tes",
+    "email": "test@gmail.com",
+    "phone": "9746318641",
+    "company": "test",
+    "jobTitle": "test",
+    "industry": "Finance / Fintech",
+    "referral": "Startup Park Website",
+    "dietary": [
+      "Vegetarian",
+      "Vegan"
+    ],
+    "requirements": "",
+    "isFundraising": false,
+    "investmentStage": "",
+    "helpNeeded": "",
+    "id": "reg_36nmo0k_mqbblre5",
+    "createdAt": "2026-06-12T19:29:29.837Z"
+  }
+]
