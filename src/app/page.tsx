@@ -106,18 +106,20 @@ function SectionLabel({ text }: { text: string }) {
 /* ─────────────────────────────────────────────
    CARD
    ───────────────────────────────────────────── */
-function Card({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
+function Card({ children, style, ...rest }: React.HTMLAttributes<HTMLDivElement> & { children?: React.ReactNode; style?: React.CSSProperties }) {
   return (
-    <div style={{
-      background: 'linear-gradient(135deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.018) 100%)',
-      backdropFilter: 'blur(20px)',
-      WebkitBackdropFilter: 'blur(20px)',
-      border: '1px solid rgba(201,162,39,0.2)',
-      borderRadius: '12px',
-      position: 'relative',
-      overflow: 'hidden',
-      ...style,
-    }}>
+    <div
+      {...rest}
+      style={{
+        background: 'linear-gradient(135deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.018) 100%)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        border: '1px solid rgba(201,162,39,0.2)',
+        borderRadius: '12px',
+        position: 'relative',
+        overflow: 'hidden',
+        ...style,
+      }}>
       {/* Top shimmer */}
       <div style={{
         position: 'absolute', top: 0, left: '10%', right: '10%', height: '1px',
@@ -579,9 +581,8 @@ export default function UnicornNight() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))', gap: '1.25rem' }}>
               {highlights.map(({ Icon: Ic, title, desc }) => (
                 <Card key={title} style={{ padding: '2rem 1.875rem', transition: 'transform 0.3s, border-color 0.3s' }}
-                  // @ts-ignore
-                  onMouseEnter={(e: MouseEvent) => { const el = e.currentTarget as HTMLDivElement; el.style.transform = 'translateY(-5px)'; el.style.borderColor = 'rgba(201,162,39,0.4)'; }}
-                  onMouseLeave={(e: MouseEvent) => { const el = e.currentTarget as HTMLDivElement; el.style.transform = 'none'; el.style.borderColor = 'rgba(201,162,39,0.2)'; }}>
+                  onMouseEnter={(e: React.MouseEvent<HTMLDivElement>) => { const el = e.currentTarget; el.style.transform = 'translateY(-5px)'; el.style.borderColor = 'rgba(201,162,39,0.4)'; }}
+                  onMouseLeave={(e: React.MouseEvent<HTMLDivElement>) => { const el = e.currentTarget; el.style.transform = 'none'; el.style.borderColor = 'rgba(201,162,39,0.2)'; }}>
                   <div style={{
                     width: '48px', height: '48px', borderRadius: '10px',
                     background: 'rgba(201,162,39,0.07)', border: '1px solid rgba(201,162,39,0.2)',
