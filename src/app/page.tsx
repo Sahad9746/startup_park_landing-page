@@ -319,7 +319,7 @@ export default function UnicornNight() {
           </a>
 
           {/* Nav */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+          <div className="desktop-nav" style={{ gap: '0.25rem' }}>
             {navLinks.map(({ label, id }) => (
               <button key={id} onClick={() => scrollTo(id)} style={{
                 padding: '0.45rem 1rem',
@@ -338,8 +338,60 @@ export default function UnicornNight() {
               Register Now
             </GoldBtn>
           </div>
+
+          {/* Hamburger toggle for mobile */}
+          <button 
+            className="mobile-nav-toggle"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle Menu"
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--cream)',
+              cursor: 'pointer',
+              padding: '0.5rem',
+              zIndex: 310,
+            }}
+          >
+            {menuOpen ? (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            ) : (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            )}
+          </button>
+
         </div>
       </header>
+
+      {/* Mobile Nav Drawer */}
+      <div className={`mobile-nav-drawer ${menuOpen ? 'open' : ''}`}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', alignItems: 'center' }}>
+          {navLinks.map(({ label, id }) => (
+            <button key={id} onClick={() => scrollTo(id)} style={{
+              background: 'transparent', border: 'none', cursor: 'pointer',
+              fontSize: '1.25rem', fontWeight: 600, letterSpacing: '0.1em',
+              textTransform: 'uppercase', color: 'rgba(242,236,216,0.85)',
+              fontFamily: "'Inter', sans-serif",
+            }}
+              onMouseEnter={e => e.currentTarget.style.color = 'var(--gold-300)'}
+              onMouseLeave={e => e.currentTarget.style.color = 'rgba(242,236,216,0.85)'}>
+              {label}
+            </button>
+          ))}
+          <GoldBtn onClick={() => scrollTo('register')} style={{ padding: '0.85rem 2.25rem', fontSize: '0.85rem', borderRadius: '6px' }}>
+            Register Now
+          </GoldBtn>
+        </div>
+      </div>
 
       <main style={{ position: 'relative', zIndex: 1 }}>
 
@@ -411,21 +463,12 @@ export default function UnicornNight() {
             </div>
 
             {/* Audience grid */}
-            <div style={{
-              display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
-              maxWidth: '740px', margin: '0 auto 3rem',
-              border: '1px solid rgba(201,162,39,0.18)', borderRadius: '4px', overflow: 'hidden',
-            }}>
+            <div className="audience-grid">
               {audience.map(({ Icon: Ic, label, sub }, i) => (
-                <div key={i} style={{
-                  padding: '1.75rem 1rem', textAlign: 'center',
-                  background: 'rgba(6,13,26,0.55)',
-                  borderRight: i < 3 ? '1px solid rgba(201,162,39,0.12)' : 'none',
-                  backdropFilter: 'blur(12px)',
-                }}>
-                  <div style={{ color: 'var(--gold-400)', marginBottom: '0.625rem', display: 'flex', justifyContent: 'center' }}><Ic /></div>
-                  <div style={{ fontFamily: "'Inter',sans-serif", fontSize: '0.82rem', fontWeight: 700, color: '#F2ECD8', marginBottom: '0.25rem' }}>{label}</div>
-                  <div style={{ fontSize: '0.62rem', color: 'rgba(242,236,216,0.4)', lineHeight: 1.5 }}>{sub}</div>
+                <div key={i} className="audience-item">
+                  <div className="audience-icon"><Ic /></div>
+                  <div className="audience-label">{label}</div>
+                  <div className="audience-sub">{sub}</div>
                 </div>
               ))}
             </div>
@@ -436,24 +479,18 @@ export default function UnicornNight() {
             </p>
 
             {/* Date · Venue · Time */}
-            <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '0', maxWidth: '620px', margin: '0 auto 3rem', border: '1px solid rgba(201,162,39,0.22)', borderRadius: '6px', overflow: 'hidden' }}>
+            <div className="event-info-strip">
               {[
                 { I: Icon.calendar, lines: ['21 JUNE 2026', 'SUNDAY'], label: 'Date' },
                 { I: Icon.location, lines: ['STARTUP PARK,', 'BENGALURU'], label: 'Venue' },
                 { I: Icon.clock,    lines: ['6PM', 'ONWARDS'], label: 'Time' },
               ].map(({ I, lines, label }, i) => (
-                <div key={i} style={{
-                  flex: 1, minWidth: '160px', padding: '1.5rem 1.25rem',
-                  background: 'rgba(6,13,26,0.6)',
-                  borderRight: i < 2 ? '1px solid rgba(201,162,39,0.12)' : 'none',
-                  display: 'flex', alignItems: 'center', gap: '0.875rem',
-                  backdropFilter: 'blur(16px)',
-                }}>
-                  <div style={{ color: 'var(--gold-400)', flexShrink: 0 }}><I /></div>
-                  <div style={{ textAlign: 'left' }}>
-                    <div style={{ fontSize: '0.55rem', fontWeight: 700, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(201,162,39,0.55)', marginBottom: '0.25rem' }}>{label}</div>
+                <div key={i} className="event-info-item">
+                  <div className="event-info-icon"><I /></div>
+                  <div className="event-info-text">
+                    <div className="event-info-label">{label}</div>
                     {lines.map((l, j) => (
-                      <div key={j} style={{ fontFamily: "'Cinzel', serif", fontWeight: 700, fontSize: 'clamp(0.78rem, 1.8vw, 1rem)', color: j === 0 ? '#F2ECD8' : 'var(--gold-300)', lineHeight: 1.25 }}>{l}</div>
+                      <div key={j} className="event-info-line" style={{ color: j === 0 ? '#F2ECD8' : 'var(--gold-300)' }}>{l}</div>
                     ))}
                   </div>
                 </div>
@@ -486,7 +523,7 @@ export default function UnicornNight() {
               </h2>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(440px, 1fr))', gap: '2.5rem', alignItems: 'start' }}>
+            <div className="about-grid">
               {/* About text */}
               <div>
                 <p style={{ fontSize: '1rem', color: 'rgba(242,236,216,0.65)', lineHeight: 1.85, marginBottom: '1.25rem' }}>
@@ -688,7 +725,7 @@ export default function UnicornNight() {
           ════════════════════════════════ */}
       <footer style={{ position: 'relative', zIndex: 1, background: '#030812', borderTop: '1px solid rgba(201,162,39,0.12)', padding: 'clamp(2rem,5vw,3rem) 0 1.5rem' }}>
         <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 clamp(1.25rem,5vw,2.5rem)' }}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '2.5rem 3rem', marginBottom: '2.5rem' }}>
+          <div className="footer-grid">
 
             {/* Brand */}
             <div style={{ maxWidth: '260px' }}>
@@ -741,7 +778,7 @@ export default function UnicornNight() {
           </div>
 
           {/* Bottom bar */}
-          <div style={{ borderTop: '1px solid rgba(201,162,39,0.08)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
+          <div className="footer-bottom">
             <p style={{ fontSize: '0.72rem', color: 'rgba(242,236,216,0.22)' }}>© 2026 Startup Park. All Rights Reserved.</p>
             <p style={{ fontSize: '0.72rem', color: 'rgba(242,236,216,0.22)' }}>Created by <span style={{ color: 'rgba(242,236,216,0.4)' }}>Admanics</span></p>
           </div>
