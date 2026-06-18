@@ -160,7 +160,9 @@ export default function UnicornNight() {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [regState, setRegState] = useState<'idle' | 'submitting' | 'payment' | 'completing' | 'success'>('idle');
+  const [registeredId, setRegisteredId] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -207,11 +209,37 @@ export default function UnicornNight() {
       });
       const data = await res.json();
       if (res.ok && data.success) {
-        setIsSuccess(true);
+        setRegisteredId(data.registration.id);
+        setRegState('payment');
+        setIsModalOpen(true);
         setFormData({ fullName: '', email: '', phone: '', company: '', termsAccepted: false });
       } else setServerError(data.message || 'Registration failed. Please try again.');
     } catch { setServerError('Network error. Please try again.'); }
     finally { setIsSubmitting(false); }
+  };
+
+  const handleConfirmPayment = async () => {
+    if (!registeredId) return;
+    setRegState('completing');
+    setServerError(null);
+    try {
+      const res = await fetch('/api/register/complete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: registeredId }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setRegState('success');
+        setIsModalOpen(false);
+      } else {
+        setServerError(data.message || 'Payment confirmation failed. Please try again.');
+        setRegState('payment');
+      }
+    } catch {
+      setServerError('Network error. Please try again.');
+      setRegState('payment');
+    }
   };
 
   const audience = [
@@ -221,14 +249,7 @@ export default function UnicornNight() {
     { Icon: Icon.star,     label: 'Business Leaders',    sub: "India's Next Changemakers" },
   ];
 
-  const agenda = [
-    { time: '6:00 PM', num: '01', title: 'Arrival & Welcome Cocktails',    desc: 'Curated welcome drinks, badge collection, and curated introductions in the Grand Foyer. The evening begins.', tag: 'Networking' },
-    { time: '6:30 PM', num: '02', title: 'Opening Address',                desc: "Startup Park leadership set the vision for the evening, welcoming Bengaluru's most influential business community.", tag: 'Keynote' },
-    { time: '7:00 PM', num: '03', title: 'The Unicorn Blueprint',          desc: "A tier-1 investor or unicorn founder shares their blueprint for building and backing India's next billion-dollar companies.", tag: 'Keynote' },
-    { time: '7:45 PM', num: '04', title: 'Panel: Capital & Strategy',      desc: 'HNIs, fund managers, and wealth advisors discuss capital deployment, portfolio strategy, and high-growth sector opportunities.', tag: 'Panel' },
-    { time: '8:30 PM', num: '05', title: 'Gourmet Dinner & Networking',   desc: 'Multi-course dinner with curated table introductions. Each seat is intentionally placed — every conversation is a potential partnership.', tag: 'Dinner' },
-    { time: '9:30 PM', num: '06', title: 'Lounge & Closing',              desc: "An open premium lounge where the evening's most meaningful conversations continue. The night ends when deals do.", tag: 'Networking' },
-  ];
+
 
   const faqs = [
     { q: 'Who can attend Unicorn Night?', a: 'Unicorn Night is an invitation-only gathering for founders, investors, HNIs, business leaders, diplomats, and startup ecosystem stakeholders.' },
@@ -269,7 +290,6 @@ export default function UnicornNight() {
 
   const navLinks = [
     { label: 'About', id: 'about' },
-    { label: 'Agenda', id: 'agenda' },
     { label: "FAQ's", id: 'faqs' },
   ];
 
@@ -295,7 +315,7 @@ export default function UnicornNight() {
 
           {/* Logo */}
           <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}>
-            <Image src="/startup-park-logo.png" alt="Startup Park" width={120} height={36} style={{ objectFit: 'contain', filter: 'brightness(1.1)' }} />
+            <Image src="/startup-park-logo.jpg" alt="Startup Park" width={120} height={36} style={{ objectFit: 'contain', filter: 'brightness(1.1)' }} />
           </a>
 
           {/* Nav */}
@@ -332,7 +352,7 @@ export default function UnicornNight() {
             {/* Startup Park presents */}
             <div style={{ marginBottom: '2rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-                <Image src="/startup-park-logo.png" alt="Startup Park" width={100} height={30} style={{ objectFit: 'contain', filter: 'brightness(1.1) opacity(0.9)' }} />
+                <Image src="/startup-park-logo.jpg" alt="Startup Park" width={100} height={30} style={{ objectFit: 'contain', filter: 'brightness(1.1) opacity(0.9)' }} />
                 <span style={{ fontSize: '0.75rem', fontStyle: 'italic', color: 'rgba(242,236,216,0.5)', letterSpacing: '0.06em' }}>presents</span>
               </div>
               {/* BENGALURU ornamental line */}
@@ -345,12 +365,12 @@ export default function UnicornNight() {
 
             {/* Event Logo */}
             <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'center' }}>
-              <div style={{ position: 'relative', width: 'clamp(160px, 25vw, 240px)', height: 'clamp(160px, 25vw, 240px)' }}>
+              <div className="floating-unicorn" style={{ position: 'relative', width: 'clamp(160px, 25vw, 240px)', height: 'clamp(160px, 25vw, 240px)' }}>
                 <Image
-                  src="/unicorn-night-logo.png"
+                  src="/unicorn-night-logo-transparent-v3.png"
                   alt="Unicorn Night"
                   fill
-                  style={{ objectFit: 'contain', filter: 'drop-shadow(0 0 40px rgba(201,162,39,0.3))' }}
+                  style={{ objectFit: 'contain' }}
                 />
               </div>
             </div>
@@ -510,74 +530,6 @@ export default function UnicornNight() {
 
 
         {/* ════════════════════════════════
-            AGENDA (THE EVENING)
-            ════════════════════════════════ */}
-        <section id="agenda" style={{ padding: 'clamp(72px,9vw,110px) 0', position: 'relative', zIndex: 1 }}>
-          <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 clamp(1.25rem,5vw,2.5rem)' }}>
-            <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
-              <SectionLabel text="The Evening" />
-              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(1.875rem,5vw,3rem)', fontWeight: 700, color: '#F2ECD8', marginBottom: '0.875rem' }}>
-                Evening <span style={goldText}>Programme</span>
-              </h2>
-              <p style={{ color: 'rgba(242,236,216,0.45)', fontSize: '1rem', lineHeight: 1.8, maxWidth: '420px', margin: '0 auto' }}>
-                A curated flow of high-value sessions, gourmet dining, and organic premium networking.
-              </p>
-            </div>
-
-            <div className="timeline-container">
-              {/* Glowing vertical center line */}
-              <div className="timeline-line" />
-              <div className="timeline-line-glow" />
-
-              {/* Timeline events */}
-              {agenda.map(({ time, num, title, desc, tag }, i) => {
-                const isLeft = i % 2 === 0;
-                return (
-                  <div key={i} className="timeline-item">
-                    {/* Left Column */}
-                    <div className={`timeline-col timeline-left-col ${isLeft ? 'active' : 'spacer'}`}>
-                      {isLeft && (
-                        <div className="timeline-card">
-                          <div className="timeline-card-shimmer" />
-                          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '0.875rem' }}>
-                            <span className="timeline-tag">{tag}</span>
-                          </div>
-                          <h3 className="timeline-title">{title}</h3>
-                          <p className="timeline-desc">{desc}</p>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Node Column */}
-                    <div className="timeline-node-col">
-                      <span className="timeline-time">{time}</span>
-                      <div className="timeline-node">{num}</div>
-                    </div>
-
-                    {/* Right Column */}
-                    <div className={`timeline-col timeline-right-col ${!isLeft ? 'active' : 'spacer'}`}>
-                      {!isLeft && (
-                        <div className="timeline-card">
-                          <div className="timeline-card-shimmer" />
-                          <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '0.875rem' }}>
-                            <span className="timeline-tag">{tag}</span>
-                          </div>
-                          <h3 className="timeline-title">{title}</h3>
-                          <p className="timeline-desc">{desc}</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-            
-            {/* Bottom space wrapper to address "so i can see bottom space" request */}
-            <div style={{ height: '3.5rem' }} />
-          </div>
-        </section>
-
-        {/* ════════════════════════════════
             REGISTER
             ════════════════════════════════ */}
         <section id="register" style={{ padding: 'clamp(72px,9vw,110px) 0', position: 'relative', zIndex: 1 }}>
@@ -588,23 +540,44 @@ export default function UnicornNight() {
                 Register <span style={goldText}>Now</span>
               </h2>
               <p style={{ color: 'rgba(242,236,216,0.5)', fontSize: '0.95rem', lineHeight: 1.75 }}>
-                Submit your details below. Approved attendees receive a digital invitation within 24–48 hours.
+                Submit your details below. Approved attendees receive a digital invitation within 24 hours.
               </p>
             </div>
 
-            {isSuccess ? (
+            {regState === 'success' ? (
               <Card style={{ textAlign: 'center', padding: '3.5rem 2.5rem', borderRadius: '14px', border: '1px solid rgba(80,200,120,0.3)' }}>
                 <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: 'rgba(80,200,120,0.1)', border: '1px solid rgba(80,200,120,0.4)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
                   <svg width="26" height="26" fill="none" viewBox="0 0 24 24" stroke="#50C878" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
                 </div>
                 <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: '1.75rem', fontWeight: 700, marginBottom: '0.75rem', ...goldText }}>Registration Received!</h3>
                 <p style={{ color: 'rgba(242,236,216,0.55)', lineHeight: 1.75, marginBottom: '0.75rem' }}>
-                  Our team will review your application and reach out within <strong style={{ color: '#F2ECD8' }}>24–48 hours</strong>.
+                  Our team will review your application and reach out within <strong style={{ color: '#F2ECD8' }}>24 hours</strong>.
                 </p>
                 <p style={{ fontFamily: "'Cormorant Garamond','Playfair Display',serif", fontStyle: 'italic', color: 'var(--gold-300)', fontSize: '1.05rem', marginBottom: '2rem' }}>
                   Together, let's create the next chapter of success.
                 </p>
                 <p style={{ fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(242,236,216,0.35)' }}>By Startup Park LLP</p>
+              </Card>
+            ) : regState === 'payment' || regState === 'completing' ? (
+              <Card style={{ padding: 'clamp(2rem,5vw,3rem)', borderRadius: '14px', textAlign: 'center' }}>
+                <h3 style={{ fontFamily: "'Playfair Display',serif", fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem', ...goldText }}>Registration Pending</h3>
+                
+                {serverError && (
+                  <div style={{ padding: '1rem 1.25rem', borderRadius: '8px', marginBottom: '1.5rem', background: 'rgba(255,80,80,0.07)', border: '1px solid rgba(255,80,80,0.3)', color: '#ff7070', fontSize: '0.875rem' }}>
+                    {serverError}
+                  </div>
+                )}
+
+                <p style={{ color: 'rgba(242,236,216,0.6)', fontSize: '0.95rem', lineHeight: 1.65, marginBottom: '2rem' }}>
+                  Thank you for submitting your details. To finalize your attendance at Unicorn Night, please complete the payment.
+                </p>
+
+                <GoldBtn 
+                  onClick={() => setIsModalOpen(true)} 
+                  style={{ width: '100%', padding: '1.1rem', fontSize: '0.88rem', borderRadius: '8px', letterSpacing: '0.12em' }}
+                >
+                  Pay Now / Show QR Code
+                </GoldBtn>
               </Card>
             ) : (
               <Card style={{ padding: 'clamp(2rem,5vw,3rem)', borderRadius: '14px' }}>
@@ -652,7 +625,8 @@ export default function UnicornNight() {
                   {/* Consent */}
                   <label style={{ display: 'flex', alignItems: 'flex-start', gap: '0.875rem', cursor: 'pointer', marginBottom: '1.75rem' }}>
                     <input type="checkbox" name="termsAccepted" required
-                      style={{ appearance: 'none', width: '17px', height: '17px', border: '1px solid rgba(201,162,39,0.35)', borderRadius: '4px', background: 'rgba(255,255,255,0.04)', cursor: 'pointer', flexShrink: 0, marginTop: '2px' } as React.CSSProperties}
+                      className="check-box"
+                      style={{ marginTop: '2px' }}
                       checked={formData.termsAccepted} onChange={handle} />
                     <span style={{ fontSize: '0.85rem', color: 'rgba(242,236,216,0.55)', lineHeight: 1.7 }}>
                       I consent to professional photography and videography during the event. <span style={{ color: 'var(--gold-400)' }}>*</span>
@@ -718,7 +692,7 @@ export default function UnicornNight() {
 
             {/* Brand */}
             <div style={{ maxWidth: '260px' }}>
-              <Image src="/startup-park-logo.png" alt="Startup Park" width={110} height={34} style={{ objectFit: 'contain', marginBottom: '0.875rem', filter: 'brightness(1) opacity(0.85)' }} />
+              <Image src="/startup-park-logo.jpg" alt="Startup Park" width={110} height={34} style={{ objectFit: 'contain', marginBottom: '0.875rem', filter: 'brightness(1) opacity(0.85)' }} />
               <p style={{ fontSize: '0.82rem', color: 'rgba(242,236,216,0.35)', lineHeight: 1.7 }}>
                 India's Launchpad for Founders.<br />
                 Innovate · Accelerate · Succeed.
@@ -729,7 +703,7 @@ export default function UnicornNight() {
             <div>
               <p style={{ fontSize: '0.58rem', fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--gold-500)', marginBottom: '1.25rem' }}>Unicorn Night</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
-                {[['about','About'],['agenda','Agenda'],['faqs',"FAQ's"],['register','Register']].map(([id, label]) => (
+                {[['about','About'],['faqs',"FAQ's"],['register','Register']].map(([id, label]) => (
                   <button key={id} onClick={() => scrollTo(id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.875rem', color: 'rgba(242,236,216,0.38)', textAlign: 'left', fontFamily: "'Inter',sans-serif", padding: 0, transition: 'color 0.2s' }}
                     onMouseEnter={e => (e.currentTarget.style.color = 'var(--gold-300)')}
                     onMouseLeave={e => (e.currentTarget.style.color = 'rgba(242,236,216,0.38)')}>
@@ -774,9 +748,93 @@ export default function UnicornNight() {
         </div>
       </footer>
 
+      {/* PAYMENT MODAL OVERLAY */}
+      {isModalOpen && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          backgroundColor: 'rgba(3, 8, 18, 0.88)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          zIndex: 9999,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '1.25rem',
+          animation: 'fadeIn 0.3s ease',
+        }}>
+          <Card style={{
+            width: '100%',
+            maxWidth: '380px',
+            padding: '3rem 2rem 2rem',
+            position: 'relative',
+            borderRadius: '16px',
+            textAlign: 'center',
+            boxShadow: '0 15px 50px rgba(0,0,0,0.8), 0 0 30px rgba(201,162,39,0.15)',
+            border: '1px solid rgba(201,162,39,0.3)',
+            animation: 'scaleUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+          }}>
+            {/* Close Button */}
+            <button
+              onClick={() => setIsModalOpen(false)}
+              disabled={regState === 'completing'}
+              style={{
+                position: 'absolute',
+                top: '1.25rem',
+                right: '1.25rem',
+                background: 'transparent',
+                border: 'none',
+                color: 'rgba(242,236,216,0.4)',
+                fontSize: '1.25rem',
+                cursor: regState === 'completing' ? 'not-allowed' : 'pointer',
+                transition: 'color 0.2s',
+                padding: '0.25rem',
+                lineHeight: 1,
+                zIndex: 10,
+              }}
+              onMouseEnter={e => { if (regState !== 'completing') e.currentTarget.style.color = '#F2ECD8'; }}
+              onMouseLeave={e => { e.currentTarget.style.color = 'rgba(242,236,216,0.4)'; }}
+            >
+              ✕
+            </button>
+            
+            {serverError && (
+              <div style={{ padding: '0.875rem 1.125rem', borderRadius: '8px', marginBottom: '1.25rem', background: 'rgba(255,80,80,0.07)', border: '1px solid rgba(255,80,80,0.3)', color: '#ff7070', fontSize: '0.85rem' }}>
+                {serverError}
+              </div>
+            )}
+
+            <div style={{ display: 'inline-block', background: '#fff', borderRadius: '10px', padding: '10px', marginBottom: '2rem', border: '1px solid rgba(201,162,39,0.3)' }}>
+              <Image 
+                src="/payment_QR.jpeg" 
+                alt="Payment QR Code" 
+                width={300} 
+                height={417} 
+                style={{ borderRadius: '4px', display: 'block' }} 
+                priority
+              />
+            </div>
+
+            <GoldBtn 
+              onClick={handleConfirmPayment} 
+              disabled={regState === 'completing'} 
+              style={{ width: '100%', padding: '1rem', fontSize: '0.85rem', borderRadius: '8px', letterSpacing: '0.1em' }}
+            >
+              {regState === 'completing' ? (
+                <><Icon.spinner /> Confirming Payment...</>
+              ) : (
+                'Confirm Payment Completed'
+              )}
+            </GoldBtn>
+          </Card>
+        </div>
+      )}
+
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap');
         @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes scaleUp { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         @media (max-width: 560px) {
           div[style*="repeat(4, 1fr)"] { grid-template-columns: repeat(2, 1fr) !important; }
         }

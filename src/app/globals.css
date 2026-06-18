@@ -455,3 +455,40 @@ textarea.form-input { resize: vertical; min-height: 80px; }
 @media (min-width: 600px)  { .g2 { grid-template-columns: 1fr 1fr; } }
 @media (min-width: 768px)  { .g3 { grid-template-columns: repeat(3,1fr); } }
 @media (min-width: 900px)  { .g4 { grid-template-columns: repeat(4,1fr); } }
+
+/* ============================================================
+   UNICORN LOGO ANIMATION
+   ============================================================ */
+@keyframes unicorn-float {
+  0% {
+    transform: translateY(0px) scale(1);
+    filter: drop-shadow(0 0 35px rgba(201, 162, 39, 0.25));
+  }
+  50% {
+    transform: translateY(-8px) scale(1.02);
+    filter: drop-shadow(0 0 45px rgba(201, 162, 39, 0.45));
+  }
+  100% {
+    transform: translateY(0px) scale(1);
+    filter: drop-shadow(0 0 35px rgba(201, 162, 39, 0.25));
+  }
+}
+
+.floating-unicorn {
+  animation: unicorn-float 6s ease-in-out infinite;
+  transform-origin: center;
+}
+
+/* ============================================================
+   MODAL TRANSITIONS
+   ============================================================ */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes scaleUp {
+  from { transform: scale(0.92); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+

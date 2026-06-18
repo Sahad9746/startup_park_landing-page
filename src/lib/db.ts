@@ -16,6 +16,7 @@ export interface Registration {
   investmentStage: string;
   helpNeeded: string;
   createdAt: string;
+  paymentStatus: 'pending' | 'completed';
 }
 
 const DB_DIR = path.join(process.cwd(), 'data');
@@ -46,7 +47,7 @@ export function getRegistrations(): Registration[] {
   }
 }
 
-export function saveRegistration(registration: Omit<Registration, 'id' | 'createdAt'>): Registration {
+export function saveRegistration(registration: Omit<Registration, 'id' | 'createdAt' | 'paymentStatus'>): Registration {
   initDb();
   const db = getRegistrations();
   
@@ -54,6 +55,7 @@ export function saveRegistration(registration: Omit<Registration, 'id' | 'create
     ...registration,
     id: `reg_${Math.random().toString(36).substring(2, 9)}_${Date.now().toString(36)}`,
     createdAt: new Date().toISOString(),
+    paymentStatus: 'pending',
   };
 
   db.push(newRegistration);
@@ -63,6 +65,26 @@ export function saveRegistration(registration: Omit<Registration, 'id' | 'create
     return newRegistration;
   } catch (err) {
     console.error('Failed to save to database file:', err);
+    throw new Error('Database write failure');
+  }
+}
+
+export function completePayment(id: string): Registration | null {
+  initDb();
+  const db = getRegistrations();
+  const index = db.findIndex(r => r.id === id);
+  if (index === -1) return null;
+
+  db[index] = {
+    ...db[index],
+    paymentStatus: 'completed',
+  };
+
+  try {
+    fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2), 'utf-8');
+    return db[index];
+  } catch (err) {
+    console.error('Failed to update database file:', err);
     throw new Error('Database write failure');
   }
 }

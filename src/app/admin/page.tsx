@@ -18,6 +18,7 @@ interface Registration {
   investmentStage: string;
   helpNeeded: string;
   createdAt: string;
+  paymentStatus: 'pending' | 'completed';
 }
 
 export default function AdminPage() {
@@ -102,6 +103,7 @@ export default function AdminPage() {
 
   // Calculate Quick Stats
   const totalCount = registrations.length;
+  const completedPaymentsCount = registrations.filter(r => r.paymentStatus === 'completed').length;
   const fundraisingCount = registrations.filter(r => r.isFundraising).length;
   
   const dietaryCounts = registrations.reduce((acc, curr) => {
@@ -120,7 +122,7 @@ export default function AdminPage() {
       'ID', 'Full Name', 'Email', 'Phone', 'Company', 'Job Title', 
       'Industry', 'Referral Source', 'Dietary Restrictions', 
       'Special Requirements', 'Actively Fundraising', 'Investment Stage', 
-      'Startup Park Help Needed', 'Registration Date'
+      'Startup Park Help Needed', 'Payment Status', 'Registration Date'
     ];
 
     // Map rows
@@ -138,6 +140,7 @@ export default function AdminPage() {
       reg.isFundraising ? 'Yes' : 'No',
       reg.investmentStage || 'N/A',
       `"${(reg.helpNeeded || '').replace(/"/g, '""')}"`,
+      reg.paymentStatus,
       reg.createdAt
     ]);
 
@@ -228,16 +231,16 @@ export default function AdminPage() {
                 <span className="stat-value text-gradient">{totalCount}</span>
               </div>
               <div className="card-glass stat-card">
+                <span className="stat-label">COMPLETED PAYMENTS</span>
+                <span className="stat-value text-gradient">{completedPaymentsCount}</span>
+              </div>
+              <div className="card-glass stat-card">
                 <span className="stat-label">ACTIVELY FUNDRAISING</span>
                 <span className="stat-value text-gradient">{fundraisingCount}</span>
               </div>
               <div className="card-glass stat-card">
                 <span className="stat-label">VEGETARIAN REQUESTS</span>
                 <span className="stat-value text-gradient">{dietaryCounts['Vegetarian'] || 0}</span>
-              </div>
-              <div className="card-glass stat-card">
-                <span className="stat-label">VEGAN REQUESTS</span>
-                <span className="stat-value text-gradient">{dietaryCounts['Vegan'] || 0}</span>
               </div>
             </div>
 
@@ -327,6 +330,7 @@ export default function AdminPage() {
                         <th>Industry</th>
                         <th>Dietary</th>
                         <th>Fundraising</th>
+                        <th>Payment</th>
                         <th>Details</th>
                       </tr>
                     </thead>
@@ -364,16 +368,21 @@ export default function AdminPage() {
                               <span className="txt-muted">None</span>
                             )}
                           </td>
-                          <td className="td-fundraising">
-                            {reg.isFundraising ? (
-                              <span className="tag-fundraising yes">
-                                {reg.investmentStage || 'Yes'}
-                              </span>
-                            ) : (
-                              <span className="tag-fundraising no">No</span>
-                            )}
-                          </td>
-                          <td className="td-details">
+                           <td className="td-fundraising">
+                             {reg.isFundraising ? (
+                               <span className="tag-fundraising yes">
+                                 {reg.investmentStage || 'Yes'}
+                               </span>
+                             ) : (
+                               <span className="tag-fundraising no">No</span>
+                             )}
+                           </td>
+                           <td className="td-payment">
+                             <span className={`tag-payment ${reg.paymentStatus}`}>
+                               {reg.paymentStatus === 'completed' ? 'Completed' : 'Pending'}
+                             </span>
+                           </td>
+                           <td className="td-details">
                             {reg.requirements && (
                               <div className="tooltip-detail" title={`Special Requirements: ${reg.requirements}`}>
                                 ♿ Needs
@@ -730,6 +739,27 @@ export default function AdminPage() {
           background: rgba(255, 255, 255, 0.05);
           border: 1px solid rgba(255, 255, 255, 0.1);
           color: var(--text-secondary);
+        }
+
+        .tag-payment {
+          display: inline-block;
+          font-size: 0.75rem;
+          font-weight: 600;
+          padding: 0.2rem 0.6rem;
+          border-radius: 50px;
+          text-align: center;
+        }
+
+        .tag-payment.completed {
+          background: var(--status-success-bg);
+          border: 1px solid var(--status-success);
+          color: var(--status-success);
+        }
+
+        .tag-payment.pending {
+          background: rgba(212, 175, 55, 0.08);
+          border: 1px solid rgba(212, 175, 55, 0.2);
+          color: var(--gold-primary);
         }
 
         .td-details {
