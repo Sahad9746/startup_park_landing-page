@@ -46,35 +46,26 @@ export async function POST(request: Request) {
       }
     }
 
-    if (!company || company.trim() === '') {
-      errors.company = 'Company/Organization is required.';
-    }
-
-    if (!jobTitle || jobTitle.trim() === '') {
-      errors.jobTitle = 'Job Title/Role is required.';
-    }
-
-    if (!industry || industry === '') {
-      errors.industry = 'Industry/Sector is required.';
-    }
-
-    if (!referral || referral === '') {
-      errors.referral = 'Please select how you heard about us.';
-    }
+    // Optional fields defaults
+    const finalCompany = company ? company.trim() : '';
+    const finalJobTitle = jobTitle ? jobTitle.trim() : '';
+    const finalIndustry = industry ? industry.trim() : 'Not specified';
+    const finalReferral = referral ? referral.trim() : 'Direct';
 
     if (Object.keys(errors).length > 0) {
       return NextResponse.json({ success: false, errors }, { status: 400 });
     }
 
     // Save to file database
+    // Save to file database
     const saved = saveRegistration({
       fullName: fullName.trim(),
       email: email.trim().toLowerCase(),
       phone: phone.trim(),
-      company: company.trim(),
-      jobTitle: jobTitle.trim(),
-      industry,
-      referral,
+      company: finalCompany,
+      jobTitle: finalJobTitle,
+      industry: finalIndustry,
+      referral: finalReferral,
       dietary: Array.isArray(dietary) ? dietary : [],
       requirements: requirements ? requirements.trim() : '',
       isFundraising: Boolean(isFundraising),

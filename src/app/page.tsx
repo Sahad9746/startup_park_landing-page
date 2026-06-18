@@ -221,6 +221,15 @@ export default function UnicornNight() {
     { Icon: Icon.star,     label: 'Business Leaders',    sub: "India's Next Changemakers" },
   ];
 
+  const agenda = [
+    { time: '6:00 PM', num: '01', title: 'Arrival & Welcome Cocktails',    desc: 'Curated welcome drinks, badge collection, and curated introductions in the Grand Foyer. The evening begins.', tag: 'Networking' },
+    { time: '6:30 PM', num: '02', title: 'Opening Address',                desc: "Startup Park leadership set the vision for the evening, welcoming Bengaluru's most influential business community.", tag: 'Keynote' },
+    { time: '7:00 PM', num: '03', title: 'The Unicorn Blueprint',          desc: "A tier-1 investor or unicorn founder shares their blueprint for building and backing India's next billion-dollar companies.", tag: 'Keynote' },
+    { time: '7:45 PM', num: '04', title: 'Panel: Capital & Strategy',      desc: 'HNIs, fund managers, and wealth advisors discuss capital deployment, portfolio strategy, and high-growth sector opportunities.', tag: 'Panel' },
+    { time: '8:30 PM', num: '05', title: 'Gourmet Dinner & Networking',   desc: 'Multi-course dinner with curated table introductions. Each seat is intentionally placed — every conversation is a potential partnership.', tag: 'Dinner' },
+    { time: '9:30 PM', num: '06', title: 'Lounge & Closing',              desc: "An open premium lounge where the evening's most meaningful conversations continue. The night ends when deals do.", tag: 'Networking' },
+  ];
+
   const faqs = [
     { q: 'Who can attend Unicorn Night?', a: 'Unicorn Night is an invitation-only gathering for founders, investors, HNIs, business leaders, diplomats, and startup ecosystem stakeholders.' },
     { q: 'Is dinner included with the event?', a: 'Yes. All attendees will enjoy a complimentary gourmet dinner and refreshments as part of the event experience.' },
@@ -260,6 +269,7 @@ export default function UnicornNight() {
 
   const navLinks = [
     { label: 'About', id: 'about' },
+    { label: 'Agenda', id: 'agenda' },
     { label: "FAQ's", id: 'faqs' },
   ];
 
@@ -498,6 +508,75 @@ export default function UnicornNight() {
           </div>
         </section>
 
+
+        {/* ════════════════════════════════
+            AGENDA (THE EVENING)
+            ════════════════════════════════ */}
+        <section id="agenda" style={{ padding: 'clamp(72px,9vw,110px) 0', position: 'relative', zIndex: 1 }}>
+          <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '0 clamp(1.25rem,5vw,2.5rem)' }}>
+            <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
+              <SectionLabel text="The Evening" />
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(1.875rem,5vw,3rem)', fontWeight: 700, color: '#F2ECD8', marginBottom: '0.875rem' }}>
+                Evening <span style={goldText}>Programme</span>
+              </h2>
+              <p style={{ color: 'rgba(242,236,216,0.45)', fontSize: '1rem', lineHeight: 1.8, maxWidth: '420px', margin: '0 auto' }}>
+                A curated flow of high-value sessions, gourmet dining, and organic premium networking.
+              </p>
+            </div>
+
+            <div className="timeline-container">
+              {/* Glowing vertical center line */}
+              <div className="timeline-line" />
+              <div className="timeline-line-glow" />
+
+              {/* Timeline events */}
+              {agenda.map(({ time, num, title, desc, tag }, i) => {
+                const isLeft = i % 2 === 0;
+                return (
+                  <div key={i} className="timeline-item">
+                    {/* Left Column */}
+                    <div className={`timeline-col timeline-left-col ${isLeft ? 'active' : 'spacer'}`}>
+                      {isLeft && (
+                        <div className="timeline-card">
+                          <div className="timeline-card-shimmer" />
+                          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '0.875rem' }}>
+                            <span className="timeline-tag">{tag}</span>
+                          </div>
+                          <h3 className="timeline-title">{title}</h3>
+                          <p className="timeline-desc">{desc}</p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Node Column */}
+                    <div className="timeline-node-col">
+                      <span className="timeline-time">{time}</span>
+                      <div className="timeline-node">{num}</div>
+                    </div>
+
+                    {/* Right Column */}
+                    <div className={`timeline-col timeline-right-col ${!isLeft ? 'active' : 'spacer'}`}>
+                      {!isLeft && (
+                        <div className="timeline-card">
+                          <div className="timeline-card-shimmer" />
+                          <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '0.875rem' }}>
+                            <span className="timeline-tag">{tag}</span>
+                          </div>
+                          <h3 className="timeline-title">{title}</h3>
+                          <p className="timeline-desc">{desc}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            
+            {/* Bottom space wrapper to address "so i can see bottom space" request */}
+            <div style={{ height: '3.5rem' }} />
+          </div>
+        </section>
+
         {/* ════════════════════════════════
             REGISTER
             ════════════════════════════════ */}
@@ -650,7 +729,7 @@ export default function UnicornNight() {
             <div>
               <p style={{ fontSize: '0.58rem', fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--gold-500)', marginBottom: '1.25rem' }}>Unicorn Night</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
-                {[['about','About'],['faqs',"FAQ's"],['register','Register']].map(([id, label]) => (
+                {[['about','About'],['agenda','Agenda'],['faqs',"FAQ's"],['register','Register']].map(([id, label]) => (
                   <button key={id} onClick={() => scrollTo(id)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.875rem', color: 'rgba(242,236,216,0.38)', textAlign: 'left', fontFamily: "'Inter',sans-serif", padding: 0, transition: 'color 0.2s' }}
                     onMouseEnter={e => (e.currentTarget.style.color = 'var(--gold-300)')}
                     onMouseLeave={e => (e.currentTarget.style.color = 'rgba(242,236,216,0.38)')}>
@@ -700,6 +779,177 @@ export default function UnicornNight() {
         @keyframes spin { to { transform: rotate(360deg); } }
         @media (max-width: 560px) {
           div[style*="repeat(4, 1fr)"] { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+        
+        /* Timeline Styles */
+        .timeline-container {
+          position: relative;
+          max-width: 900px;
+          margin: 0 auto;
+          padding: 1.5rem 0;
+        }
+        .timeline-line {
+          position: absolute;
+          left: 50%;
+          top: 0;
+          bottom: 0;
+          width: 1px;
+          transform: translateX(-50%);
+          background: linear-gradient(180deg, transparent 0%, rgba(201,162,39,0.35) 8%, rgba(201,162,39,0.35) 92%, transparent 100%);
+          z-index: 0;
+        }
+        .timeline-line-glow {
+          position: absolute;
+          left: 50%;
+          top: 0;
+          bottom: 0;
+          width: 3px;
+          transform: translateX(-50%);
+          background: linear-gradient(180deg, transparent 0%, rgba(201,162,39,0.08) 8%, rgba(201,162,39,0.08) 92%, transparent 100%);
+          filter: blur(4px);
+          z-index: 0;
+        }
+        .timeline-item {
+          display: grid;
+          grid-template-columns: 1fr 100px 1fr;
+          margin-bottom: 3rem;
+          position: relative;
+          z-index: 1;
+          align-items: center;
+        }
+        .timeline-item:last-child {
+          margin-bottom: 0;
+        }
+        .timeline-left-col {
+          text-align: right;
+          padding-right: 2.5rem;
+        }
+        .timeline-right-col {
+          text-align: left;
+          padding-left: 2.5rem;
+        }
+        .timeline-node-col {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.5rem;
+          z-index: 2;
+        }
+        .timeline-card {
+          background: linear-gradient(135deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.018) 100%);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border: 1px solid rgba(201,162,39,0.2);
+          border-radius: 12px;
+          padding: 1.5rem 1.75rem;
+          position: relative;
+          overflow: hidden;
+          transition: border-color 0.3s, transform 0.3s;
+          cursor: default;
+        }
+        .timeline-card-shimmer {
+          position: absolute;
+          top: 0; left: 10%; right: 10%; height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(201,162,39,0.5), transparent);
+        }
+        .timeline-left-col .timeline-card:hover {
+          border-color: rgba(201,162,39,0.45);
+          transform: translateX(-4px);
+        }
+        .timeline-right-col .timeline-card:hover {
+          border-color: rgba(201,162,39,0.45);
+          transform: translateX(4px);
+        }
+        .timeline-tag {
+          font-size: 0.58rem;
+          font-weight: 700;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          color: var(--gold-500);
+          background: rgba(201,162,39,0.08);
+          border: 1px solid rgba(201,162,39,0.25);
+          padding: 0.2rem 0.6rem;
+          border-radius: 3px;
+          display: inline-block;
+        }
+        .timeline-title {
+          font-family: 'Playfair Display', serif;
+          font-size: 1.15rem;
+          font-weight: 700;
+          color: #F2ECD8;
+          margin-bottom: 0.625rem;
+          line-height: 1.35;
+        }
+        .timeline-desc {
+          font-size: 0.85rem;
+          color: rgba(242,236,216,0.5);
+          line-height: 1.7;
+        }
+        .timeline-time {
+          font-size: 0.65rem;
+          font-weight: 700;
+          letter-spacing: 0.06em;
+          color: var(--gold-400);
+          white-space: nowrap;
+        }
+        .timeline-node {
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, rgba(201,162,39,0.15) 0%, rgba(201,162,39,0.05) 100%);
+          border: 1.5px solid rgba(201,162,39,0.55);
+          box-shadow: 0 0 0 5px rgba(201,162,39,0.06), 0 0 20px rgba(201,162,39,0.15);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          font-family: 'Cinzel', serif;
+          font-size: 0.65rem;
+          font-weight: 700;
+          color: var(--gold-300);
+          letter-spacing: 0.04em;
+        }
+
+        /* Responsive Timeline */
+        @media (max-width: 768px) {
+          .timeline-line, .timeline-line-glow {
+            left: 22px;
+            transform: none;
+          }
+          .timeline-item {
+            display: flex;
+            flex-direction: row;
+            gap: 1.25rem;
+            margin-bottom: 2.5rem;
+            align-items: flex-start;
+          }
+          .timeline-col.spacer {
+            display: none;
+          }
+          .timeline-col.active {
+            flex: 1;
+            width: 100%;
+          }
+          .timeline-left-col, .timeline-right-col {
+            text-align: left;
+            padding-left: 0;
+            padding-right: 0;
+          }
+          .timeline-left-col .timeline-card:hover,
+          .timeline-right-col .timeline-card:hover {
+            transform: translateY(-2px);
+          }
+          .timeline-node-col {
+            order: -1;
+            flex-shrink: 0;
+          }
+          .timeline-node {
+            width: 38px;
+            height: 38px;
+          }
+          .timeline-time {
+            font-size: 0.6rem;
+          }
         }
       `}</style>
     </>
