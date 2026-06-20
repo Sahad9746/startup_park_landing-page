@@ -81,6 +81,26 @@ export default function AdminPage() {
     setPasscode('');
   };
 
+  const handleDeleteClick = async (id: string) => {
+    if (!window.confirm('Are you sure you want to delete this registration?')) return;
+    
+    try {
+      const response = await fetch(`/api/admin/registrations?id=${encodeURIComponent(id)}&passcode=${encodeURIComponent(passcode)}`, {
+        method: 'DELETE',
+      });
+      
+      const data = await response.json();
+      if (response.ok && data.success) {
+        setRegistrations(prev => prev.filter(r => r.id !== id));
+      } else {
+        alert(data.message || 'Failed to delete registration.');
+      }
+    } catch (err) {
+      console.error('Delete request failed:', err);
+      alert('Network error. Failed to delete registration.');
+    }
+  };
+
   // Filter registrations
   const filteredRegistrations = registrations.filter(reg => {
     const matchesSearch = 
@@ -332,6 +352,7 @@ export default function AdminPage() {
                         <th>Fundraising</th>
                         <th>Payment</th>
                         <th>Details</th>
+                        <th>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -394,6 +415,15 @@ export default function AdminPage() {
                               </div>
                             )}
                             {!reg.requirements && !reg.helpNeeded && <span className="txt-muted">—</span>}
+                          </td>
+                          <td>
+                            <button
+                              onClick={() => handleDeleteClick(reg.id)}
+                              className="btn-delete"
+                              title="Delete Registration"
+                            >
+                              ✕
+                            </button>
                           </td>
                         </tr>
                       ))}
@@ -468,6 +498,28 @@ export default function AdminPage() {
           border-color: var(--status-error);
           color: var(--status-error);
           background: rgba(255, 90, 95, 0.05);
+        }
+
+        .btn-delete {
+          padding: 0.3rem 0.6rem;
+          background: transparent;
+          border: 1px solid rgba(255, 90, 95, 0.35);
+          color: rgba(255, 90, 95, 0.85);
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 0.8rem;
+          line-height: 1;
+          transition: all 0.2s ease;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .btn-delete:hover {
+          border-color: #ff5a5f;
+          color: #fff;
+          background: #ff5a5f;
+          box-shadow: 0 0 10px rgba(255, 90, 95, 0.3);
         }
 
         .admin-main-content {

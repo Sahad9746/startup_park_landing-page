@@ -88,3 +88,19 @@ export function completePayment(id: string): Registration | null {
     throw new Error('Database write failure');
   }
 }
+
+export function deleteRegistration(id: string): boolean {
+  initDb();
+  const db = getRegistrations();
+  const originalLength = db.length;
+  const filtered = db.filter(r => r.id !== id);
+  if (filtered.length === originalLength) return false;
+
+  try {
+    fs.writeFileSync(DB_FILE, JSON.stringify(filtered, null, 2), 'utf-8');
+    return true;
+  } catch (err) {
+    console.error('Failed to delete registration from database file:', err);
+    throw new Error('Database write failure');
+  }
+}

@@ -315,7 +315,7 @@ export default function UnicornNight() {
 
           {/* Logo */}
           <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}>
-            <Image src="/startup-park-logo.jpg" alt="Startup Park" width={120} height={36} style={{ objectFit: 'contain', filter: 'brightness(1.1)' }} />
+            <Image src="/startup-park-logo-transparent.png" alt="Startup Park" width={120} height={36} style={{ objectFit: 'contain', filter: 'brightness(1.1)' }} />
           </a>
 
           {/* Nav */}
@@ -404,7 +404,7 @@ export default function UnicornNight() {
             {/* Startup Park presents */}
             <div style={{ marginBottom: '2rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
-                <Image src="/startup-park-logo.jpg" alt="Startup Park" width={100} height={30} style={{ objectFit: 'contain', filter: 'brightness(1.1) opacity(0.9)' }} />
+                <Image src="/startup-park-logo-transparent.png" alt="Startup Park" width={100} height={30} style={{ objectFit: 'contain', filter: 'brightness(1.1) opacity(0.9)' }} />
                 <span style={{ fontSize: '0.75rem', fontStyle: 'italic', color: 'rgba(242,236,216,0.5)', letterSpacing: '0.06em' }}>presents</span>
               </div>
               {/* BENGALURU ornamental line */}
@@ -419,7 +419,7 @@ export default function UnicornNight() {
             <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'center' }}>
               <div className="floating-unicorn" style={{ position: 'relative', width: 'clamp(160px, 25vw, 240px)', height: 'clamp(160px, 25vw, 240px)' }}>
                 <Image
-                  src="/unicorn-night-logo-transparent-v3.png"
+                  src="/unicorn-head-transparent.png"
                   alt="Unicorn Night"
                   fill
                   style={{ objectFit: 'contain' }}
@@ -729,7 +729,7 @@ export default function UnicornNight() {
 
             {/* Brand */}
             <div style={{ maxWidth: '260px' }}>
-              <Image src="/startup-park-logo.jpg" alt="Startup Park" width={110} height={34} style={{ objectFit: 'contain', marginBottom: '0.875rem', filter: 'brightness(1) opacity(0.85)' }} />
+              <Image src="/startup-park-logo-transparent.png" alt="Startup Park" width={110} height={34} style={{ objectFit: 'contain', marginBottom: '0.875rem', filter: 'brightness(1) opacity(0.85)' }} />
               <p style={{ fontSize: '0.82rem', color: 'rgba(242,236,216,0.35)', lineHeight: 1.7 }}>
                 India's Launchpad for Founders.<br />
                 Innovate · Accelerate · Succeed.
